@@ -1,0 +1,1 @@
+java -jar modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate -i "exec/erable-SC2P-CI Souscription Interface Contract-v1.5.json" -l java -Dmodels -c exec/config.json -o exec/output

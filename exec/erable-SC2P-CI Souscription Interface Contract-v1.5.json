@@ -1,0 +1,1159 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.5",
+        "title": "Enabler Souscription",
+        "description": "API list for Subscription enabler \n\nWhen possible, a detailed error will be sent by the back-end. \nFor generic errors such as validation error with the parameters, a generic code will be used:\n\n| status   | HTTP code | meaning      |\n| -------- | ----------- | ------------ |\n|SC2PSOUS-000  | 200 | No error|\n|SC2PSOUS-001  | 400 | missing or invalid HTTP header |\n|SC2PSOUS-002  | 400 | missing or invalid parameter   |\n|SC2PSOUS-003  | 400 | missing or body content        |\n|SC2PSOUS-004  | 200 | Error stack from external SI|\n|SC2PSOUS-005  | 400 | Error stack from internal enabler |\n|SC2PSOUS-006  | 400 | lock in progress |\n|SC2PSOUS-007  | 403 | unauthorized client        |\n|SC2PSOUS-010\t | 405 | method not allowed             |\n|SC2PSOUS-040  | 504 | timeout when we tried to call external SI |\n|SC2PSOUS-041  | 504 | timeout when we tried to call internal enabler |\n|SC2PSOUS-050  | 500 | unexpected error          |\n\nHere are listed the necessary methods in order to perform various subscription operations.\n\n\n| Use Case   | Request   |\n | -------- | ----------- |\n | Retrieve subscribable options  | GET /v1/options/subscribable/light<br/> GET /v1/options/subscribable/medium<br/> GET /v1/options/subscribable/full |\n | Retrieve subscribed options  | GET /v1/options/subscribed/light<br/> GET /v1/options/subscribed/medium<br/>GET /v1/options/subscribed/full |\n | Subscribe option  | POST /v1/options/{optionId} |\n | Terminate option  | DELETE /v1/options/{optionId} |\n"
+    },
+    "schemes": [
+        "http"
+    ],
+    "tags": [
+        {
+            "name": "Consultation",
+            "description": "Method to retrieve option list"
+        },
+        {
+            "name": "Subscription",
+            "description": "Method to subscribe to multiple options"
+        },
+        {
+            "name": "Termination",
+            "description": "Method to terminate one option"
+        }
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/v1/options/{etatOption}/{mode}/{options}": {
+            "get": {
+                "description": "Gets the list of the client options in relation with the type and mode desired.\n",
+                "tags": [
+                    "Consultation"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/ERABLE-Request-Id"
+                    },
+                    {
+                        "$ref": "#/parameters/etatOption"
+                    },
+                    {
+                        "$ref": "#/parameters/mode"
+                    },
+                    {
+                        "$ref": "#/parameters/arrayOptionId"
+                    },
+                    {
+                        "$ref": "#/parameters/userType"
+                    },
+                    {
+                        "$ref": "#/parameters/userId"
+                    },
+                    {
+                        "$ref": "#/parameters/appName"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/GetOptionResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "405": {
+                        "description": "Forbidden request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "500": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "504": {
+                        "description": "timeout error",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/options": {
+            "post": {
+                "description": "This request allow a user to subscribe to various Orange options for one request, if this option is available for the client.\n",
+                "tags": [
+                    "Subscription"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "description": "Array of options and/or variations to subscribe.\n",
+                        "schema": {
+                            "$ref": "#/definitions/SubscribeRequestList"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/ERABLE-Request-Id"
+                    },
+                    {
+                        "$ref": "#/parameters/appName"
+                    },
+                    {
+                        "$ref": "#/parameters/userType"
+                    },
+                    {
+                        "$ref": "#/parameters/userId"
+                    },
+                    {
+                        "$ref": "#/parameters/gid"
+                    },
+                    {
+                        "$ref": "#/parameters/email"
+                    },
+                    {
+                        "$ref": "#/parameters/ise"
+                    },
+                    {
+                        "$ref": "#/parameters/proCivility"
+                    },
+                    {
+                        "$ref": "#/parameters/proLastName"
+                    },
+                    {
+                        "$ref": "#/parameters/proFirstName"
+                    },
+                    {
+                        "$ref": "#/parameters/proNumber"
+                    },
+                    {
+                        "$ref": "#/parameters/proEmail"
+                    },
+                    {
+                        "$ref": "#/parameters/doNotif"
+                    },
+                    {
+                        "$ref": "#/parameters/canal"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/ClassicResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "405": {
+                        "description": "Forbidden request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "500": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "This request delete an Orange option by the eSOFT SI if this operation is available for the client.\n",
+                "tags": [
+                    "Termination"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/arrayOptionIdMandatory"
+                    },
+                    {
+                        "$ref": "#/parameters/ERABLE-Request-Id"
+                    },
+                    {
+                        "$ref": "#/parameters/appName"
+                    },
+                    {
+                        "$ref": "#/parameters/userType"
+                    },
+                    {
+                        "$ref": "#/parameters/userId"
+                    },
+                    {
+                        "$ref": "#/parameters/gid"
+                    },
+                    {
+                        "$ref": "#/parameters/email"
+                    },
+                    {
+                        "$ref": "#/parameters/ise"
+                    },
+                    {
+                        "$ref": "#/parameters/proCivility"
+                    },
+                    {
+                        "$ref": "#/parameters/proLastName"
+                    },
+                    {
+                        "$ref": "#/parameters/proFirstName"
+                    },
+                    {
+                        "$ref": "#/parameters/proNumber"
+                    },
+                    {
+                        "$ref": "#/parameters/proEmail"
+                    },
+                    {
+                        "$ref": "#/parameters/doNotif"
+                    },
+                    {
+                        "$ref": "#/parameters/canal"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/ClassicResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "405": {
+                        "description": "Forbidden request",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    },
+                    "500": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "ERABLE-Request-Id": {
+            "name": "ERABLE-Request-Id",
+            "in": "header",
+            "type": "string",
+            "description": "This header identifies a request. Each request receiving it will send it back in his response header\n",
+            "required": true
+        },
+        "appName": {
+            "name": "appName",
+            "in": "query",
+            "type": "string",
+            "description": "Identify the application\n",
+            "required": true
+        },
+        "etatOption": {
+            "name": "etatOption",
+            "in": "path",
+            "type": "string",
+            "description": "Indicate the state of options desired<br/>Possible values: *subscribable*, *subscribed*, *ongoing*, *all*\n",
+            "required": true
+        },
+        "mode": {
+            "name": "mode",
+            "in": "path",
+            "type": "string",
+            "description": "Indicate the mode full, medium or light of the desired response.<br/>\n- light : returns the light version of the Erable catalog option, and the esoft option, without fields *cancellationInformation*, *subscriptionInformation*, *variationModificationInformation*\n- medium : returns the medium version of the Erable catalog option, and the esoft option, without fields *cancellationInformation*, *subscriptionInformation*, *variationModificationInformation*\n- full : returns the full version of the Erable catalog option, and the complete esoft option\n",
+            "required": true
+        },
+        "userType": {
+            "name": "userType",
+            "in": "header",
+            "type": "string",
+            "description": "Indicate the client type.<br/>Possible values: *internet*, *mobile*",
+            "required": true
+        },
+        "userId": {
+            "name": "userId",
+            "in": "header",
+            "type": "string",
+            "description": "Identify the client with SAI for internet client or MSISDN for mobile client\n",
+            "required": true
+        },
+        "arrayOptionId": {
+            "name": "options",
+            "in": "path",
+            "type": "string",
+            "description": "array of options on Erable catalog. Extracted from the GET options request. If this parameter is not set, no filter is applied to the response. Example [\"1\",\"2\",\"3\"]\n",
+            "required": false
+        },
+        "arrayOptionIdMandatory": {
+            "name": "options",
+            "in": "path",
+            "type": "string",
+            "description": "array of options on Erable catalog. Extracted from the GET options request. Exemple [\"1\",\"2\",\"3\"]\n",
+            "required": true
+        },
+        "proCivility": {
+            "name": "proCivility",
+            "in": "header",
+            "type": "string",
+            "description": "identify the civility of a pro client.<br/><b>Mandatory for an internet pro client</b>\n",
+            "required": false
+        },
+        "proLastName": {
+            "name": "proLastName",
+            "in": "header",
+            "type": "string",
+            "description": "identify the last name of a pro client.<br/><b>Mandatory for an internet pro client</b>\n",
+            "required": false
+        },
+        "proFirstName": {
+            "name": "proFirstName",
+            "in": "header",
+            "type": "string",
+            "description": "identify the first name of a pro client.<br/><b>Mandatory for an internet pro client</b>\n",
+            "required": false
+        },
+        "proNumber": {
+            "name": "proNumber",
+            "in": "header",
+            "type": "string",
+            "description": "number of a pro client.<br/><b>Mandatory for an internet pro client</b>\n",
+            "required": false
+        },
+        "proEmail": {
+            "name": "proEmail",
+            "in": "header",
+            "type": "string",
+            "description": "identify th pro client email.<br/><b>Mandatory for an internet pro client</b>\n",
+            "required": false
+        },
+        "gid": {
+            "name": "gid",
+            "in": "header",
+            "type": "string",
+            "description": "identify an Orange client\n",
+            "required": false
+        },
+        "ise": {
+            "name": "ise",
+            "in": "header",
+            "type": "string",
+            "description": "corresponding to a wha-i id\n",
+            "required": false
+        },
+        "email": {
+            "name": "email",
+            "in": "header",
+            "type": "string",
+            "description": "email address\n",
+            "required": false
+        },
+        "doNotif": {
+            "name": "doNotif",
+            "in": "header",
+            "type": "string",
+            "description": "true to notify user\n",
+            "required": false
+        },
+        "canal": {
+            "name": "canal",
+            "in": "header",
+            "type": "string",
+            "description": "The canal to use for user notification.<br/><b>Mandatory when doNotif is set to true.</b>\n",
+            "required": false
+        }
+    },
+    "definitions": {
+        "ClassicResponse": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+					"type": "integer",
+					"description": "SC2PSOUS-000 for no error. identify the error type with SC2P code"
+                },
+                "message": {
+                    "type": "string",
+					"description": "technical description of the error or \"No error\""
+                }
+            }
+        },
+        "GetOptionResponse": {
+            "type": "object",
+            "required": [
+                "code",
+                "message",
+                "options",
+                "actions"
+            ],
+            "properties": {
+                "code": {
+					"type": "integer",
+					"description": "SC2PSOUS-000 for no error. identify the error type with SC2P code"
+                },
+                "message": {
+                    "type": "string",
+					"description": "technical description of the error or \"No error\""
+                },
+                "actions": {
+                    "$ref": "#/definitions/actions"
+                },
+                "options": {
+                    "$ref": "#/definitions/OptionList"
+                }
+            }
+        },
+        "OptionList": {
+            "type": "array",
+            "description": "User option list",
+            "items": {
+                "$ref": "#/definitions/Option"
+            }
+        },
+        "Option": {
+            "type": "object",
+            "required": [
+                "catalogOption",
+                "eSoftOption"
+            ],
+            "properties": {
+                "catalogOption": {
+                    "$ref": "#/definitions/catalogOption"
+                },
+                "eSoftOption": {
+                    "$ref": "#/definitions/eSoftOption"
+                }
+            }
+        },
+        "error": {
+            "type": "object",
+            "required": [
+                "code",
+                "message",
+                "description"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "code": {
+					"type": "integer",
+					"description": "SC2PSOUS-000 for no error. identify the error type with SC2P code"
+                },
+                "message": {
+                    "type": "string",
+					"description": "technical description of the error or \"No error\""
+                }
+            }
+        },
+        "actions": {
+            "type": "object",
+            "description": "indicate if the user can modify his options.",
+			"additionalProperties": {
+				"type": "boolean",
+				"description": "indicate if the user can modify his options."
+			}
+        },
+        "SubscribeRequestList": {
+            "type": "array",
+            "description": "User option list",
+            "items": {
+                "$ref": "#/definitions/SubscribeRequestOption"
+            }
+        },
+        "SubscribeRequestOption": {
+            "type": "object",
+            "required": [
+                "optionId"
+            ],
+            "properties": {
+                "optionId": {
+                    "type": "string"
+                },
+                "variationCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "installedOffer": {
+            "type": "object",
+            "required": [
+                "code",
+                "offerType",
+                "options"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "OPS code of the subscribed OC"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Label of the contract"
+                },
+                "variationCode": {
+                    "type": "string",
+                    "description": "Code of the variation"
+                },
+                "codeOT": {
+                    "type": "string",
+                    "description": "Offer code of the contract"
+                },
+                "offerType": {
+                    "type": "string",
+                    "description": "nature of the parc"
+                },
+                "installationStatus": {
+                    "type": "string",
+                    "description": "status of the installation"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/eSoftOption"
+                    }
+                }
+            }
+        },
+        "eSoftOption": {
+            "type": "object",
+            "description": "represents the eSoft part of the option",
+            "required": [
+                "code",
+                "label",
+                "isInstalled",
+                "canBeSubscribed",
+                "canBeCancelled",
+                "canModifyVariation"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "nature of the parc"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "nature of the parc"
+                },
+                "codeOT": {
+                    "type": "string",
+                    "description": "nature of the parc"
+                },
+                "isInstalled": {
+                    "type": "boolean",
+                    "description": "indicate if the offer is owned by the user"
+                },
+                "canBeSubscribed": {
+                    "type": "boolean",
+                    "description": "indicate if the offer is subscribable by the user"
+                },
+                "canBeCancelled": {
+                    "type": "boolean",
+                    "description": "indicate if the offer is cancellable by the user"
+                },
+                "canModifyVariation": {
+                    "type": "boolean",
+                    "description": "indicate if the offer is migrable towards another variation by the user"
+                },
+                "installedOptionInformation": {
+                    "$ref": "#/definitions/installedOptionInformation"
+                },
+                "cancellationInformation": {
+                    "$ref": "#/definitions/cancellationInformation"
+                },
+                "subscriptionInformation": {
+                    "$ref": "#/definitions/subscriptionInformation"
+                },
+                "modifyVariationInformation": {
+                    "$ref": "#/definitions/modifyVariationInformation"
+                }
+            }
+        },
+        "installedOptionInformation": {
+            "type": "object",
+            "description": "always present in response",
+            "required": [
+                "installationStatus"
+            ],
+            "properties": {
+                "installationStatus": {
+                    "type": "string",
+                    "description": "status of the offer"
+                },
+                "codeSO": {
+                    "type": "string",
+                    "description": "associated code SO"
+                },
+                "installedAttributes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/installedAttribute"
+                    }
+                }
+            }
+        },
+        "installedAttribute": {
+            "type": "object",
+            "required": [
+                "code",
+                "label",
+                "isVariation",
+                "valueLabel"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "attribute code"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "attribute label"
+                },
+                "isVariation": {
+                    "type": "boolean",
+                    "description": "indicates if the attribute is a variation or not"
+                },
+                "valueCode": {
+                    "type": "string",
+                    "description": "value code"
+                },
+                "valueLabel": {
+                    "type": "string",
+                    "description": "value label"
+                },
+                "tariffs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tariff"
+                    }
+                }
+            }
+        },
+        "tariff": {
+            "type": "object",
+            "required": [
+                "type",
+                "code",
+                "label",
+                "duration",
+                "amountIncludingTax",
+                "amountWithoutTax"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "type of taxes to pay"
+                },
+                "code": {
+                    "type": "string",
+                    "description": "catalog code of the tariff"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "tariff label"
+                },
+                "duration": {
+                    "type": "integer",
+                    "description": "application duration in months"
+                },
+                "amountIncludingTax": {
+                    "type": "number",
+                    "description": "monthly cost with taxes"
+                },
+                "amountWithoutTax": {
+                    "type": "number",
+                    "description": "monthly cost without taxes"
+                },
+                "discounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/discount"
+                    }
+                }
+            }
+        },
+        "discount": {
+            "type": "object",
+            "required": [
+                "code",
+                "label",
+                "duration",
+                "amountIncludingTax",
+                "amountWithoutTax"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "catalog code of the discount"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "discount label"
+                },
+                "duration": {
+                    "type": "integer",
+                    "description": "application duration in months"
+                },
+                "amountIncludingTax": {
+                    "type": "number",
+                    "description": "monthly cost with taxes"
+                },
+                "amountWithoutTax": {
+                    "type": "number",
+                    "description": "monthly cost without taxes"
+                }
+            }
+        },
+        "cancellationInformation": {
+            "type": "object",
+            "description": "present in response only if mode = full",
+            "required": [
+                "eligibilility"
+            ],
+            "properties": {
+                "eligibilility": {
+                    "$ref": "#/definitions/eligibility"
+                }
+            }
+        },
+        "eligibility": {
+            "type": "object",
+            "required": [
+                "reasoncode",
+                "reasonlabel"
+            ],
+            "properties": {
+                "reasoncode": {
+                    "type": "string",
+                    "description": "code for the current reason",
+                    "enum": [
+                        "AUTHORIZED",
+                        "NOT_OWNED",
+                        "INCLUDED",
+                        "OTHER",
+                        "OWNED",
+                        "INCOMP_WITH_BUY_OWNED",
+                        "NOT_OPTION_WITH_VARIATION",
+                        "NOT_OTHER_VARIATION_ELIGIBLE"
+                    ]
+                },
+                "reasonlabel": {
+                    "type": "string",
+                    "description": "label for the current reason"
+                }
+            }
+        },
+        "subscriptionInformation": {
+            "type": "object",
+            "description": "present in response only if mode = full",
+            "required": [
+                "eligibilility"
+            ],
+            "properties": {
+                "eligibilility": {
+                    "$ref": "#/definitions/eligibility"
+                },
+                "information": {
+                    "$ref": "#/definitions/information"
+                },
+                "variations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/variation"
+                    }
+                },
+                "tariffs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tariff"
+                    }
+                }
+            }
+        },
+        "information": {
+            "type": "object",
+            "properties": {
+                "hasVariation": {
+                    "type": "string",
+                    "description": "indicates if option has variation(s)"
+                },
+                "codeSO": {
+                    "type": "string",
+                    "description": "optional code of the service"
+                },
+                "attributeVariationCode": {
+                    "type": "string",
+                    "description": "attribute code"
+                },
+                "attributeVariationLabel": {
+                    "type": "string",
+                    "description": "attribute label"
+                }
+            }
+        },
+        "variation": {
+            "type": "object",
+            "required": [
+                "code",
+                "rank",
+                "label",
+                "value"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "code identifying the variation"
+                },
+                "rank": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "label of the variation for the given option"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "value of the variation for eSoft"
+                }
+            }
+        },
+        "modifyVariationInformation": {
+            "type": "object",
+            "description": "present in response only if mode = full",
+            "required": [
+                "eligibilility"
+            ],
+            "properties": {
+                "eligibilility": {
+                    "$ref": "#/definitions/eligibility"
+                },
+                "information": {
+                    "$ref": "#/definitions/information"
+                },
+                "variations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/variation"
+                    }
+                }
+            }
+        },
+        "catalogOption": {
+            "type": "object",
+            "description": "represents the Erable catalog part of the option",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/productProperties"
+                },
+                {
+                    "$ref": "#/definitions/optionProperties"
+                }
+            ]
+        },
+        "productProperties": {
+            "required": [
+                "id",
+                "type",
+                "externalId",
+                "service",
+                "domains",
+                "catalogueId",
+                "paymentType",
+                "status",
+                "creation",
+                "subitems",
+                "metadata",
+                "shortDesc",
+                "longDesc",
+                "logo",
+                "legal"
+            ],
+            "properties": {
+                "id": {
+                    "description": "productId",
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "option",
+                        "pass",
+                        "wha"
+                    ],
+                    "description": "type of the product\n"
+                },
+                "externalId": {
+                    "description": "Identifier on th external SI",
+                    "type": "string"
+                },
+                "service": {
+                    "$ref": "#/definitions/service"
+                },
+                "domains": {
+                    "$ref": "#/definitions/domains"
+                },
+                "catalogueId": {
+                    "type": "integer",
+                    "description": "catalog identifier"
+                },
+                "paymentType": {
+                    "type": "integer",
+                    "description": "Type of payement method associated to the product",
+                    "enum": [
+                        {
+                            "0": "N/A"
+                        },
+                        {
+                            "1": "free"
+                        },
+                        {
+                            "2": "internet"
+                        },
+                        {
+                            "3": "mobile"
+                        },
+                        {
+                            "4": "credit card"
+                        },
+                        {
+                            "5": "Apple Store"
+                        },
+                        {
+                            "6": "Google Play"
+                        },
+                        {
+                            "7": "Microsoft Marektplace"
+                        },
+                        {
+                            "8": "temporary"
+                        }
+                    ]
+                },
+                "status": {
+                    "type": "integer",
+                    "enum": [
+                        "enabled_C -> enabled commercialisable",
+                        "enabled_NC -> enabled non-commercialisable",
+                        "test -> test"
+                    ],
+                    "description": "product status\n"
+                },
+                "creation": {
+                    "description": "date",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "subitems": {
+                    "$ref": "#/definitions/SubItems"
+                },
+                "metadata": {
+                    "type": "string",
+                    "description": "any useful metadata"
+                },
+                "shortDesc": {
+                    "type": "string",
+                    "description": "short description of the product"
+                },
+                "longDesc": {
+                    "type": "string",
+                    "description": "long description of the product"
+                },
+                "logo": {
+                    "type": "string",
+                    "description": "url of the product logo"
+                },
+                "legal": {
+                    "type": "string",
+                    "description": "legal mentions"
+                }
+            }
+        },
+        "optionProperties": {
+            "required": [
+                "options"
+            ],
+            "properties": {
+                "options": {
+                    "$ref": "#/definitions/option"
+                }
+            }
+        },
+        "service": {
+            "type": "object",
+            "required": [
+                "name",
+                "description"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "domains": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/domain"
+            }
+        },
+        "domain": {
+            "type": "object",
+            "required": [
+                "name",
+                "description"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "optionChild": {
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "overriden from newshop information or overriden by service if \"appName\" parameter is defined and information is known by catalog"
+                },
+                "priceTTC": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "overriden from newshop information or overriden by service if \"appName\" parameter is defined and information is known by catalog"
+                },
+                "isManagedByEsoft": {
+                    "type": "boolean"
+                },
+                "isMobile": {
+                    "type": "boolean"
+                },
+                "needCommitment": {
+                    "type": "boolean"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "importDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "isPromotional": {
+                    "type": "boolean"
+                },
+                "flagPromise": {
+                    "type": "string"
+                },
+                "flagRDP": {
+                    "type": "string"
+                },
+                "variations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/variation"
+                    }
+                }
+            }
+        },
+        "option": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/optionChild"
+                }
+            ]
+        },
+        "SubItems": {
+            "type": "array",
+            "description": "retrived only when parameter withSubItems is set to true",
+            "items": {
+                "$ref": "#/definitions/SubItem"
+            }
+        },
+        "SubItem": {
+            "type": "object",
+            "required": [
+                "id",
+                "key",
+                "description",
+                "value"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string",
+                    "description": "key of the subitem"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "description of the subitem"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "value of the subitem"
+                }
+            }
+        }
+    }
+}

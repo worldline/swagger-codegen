@@ -203,11 +203,10 @@ public class JavaClientCodegen extends DefaultCodegen implements CodegenConfig {
         importMapping.put("JsonSerialize", "com.fasterxml.jackson.databind.annotation.JsonSerialize");
 
         // imports for pojos
-        importMapping.put("ApiModelProperty", "io.swagger.annotations.ApiModelProperty");
-        importMapping.put("ApiModel", "io.swagger.annotations.ApiModel");
         importMapping.put("JsonProperty", "com.fasterxml.jackson.annotation.JsonProperty");
         importMapping.put("JsonValue", "com.fasterxml.jackson.annotation.JsonValue");
         importMapping.put("Objects", "java.util.Objects");
+		importMapping.put("MoreObjects", "com.google.common.base.MoreObjects");
         importMapping.put("StringUtil", invokerPackage + ".StringUtil");
 
         final String invokerFolder = (sourceFolder + '/' + invokerPackage).replace(".", "/");
@@ -465,6 +464,7 @@ public class JavaClientCodegen extends DefaultCodegen implements CodegenConfig {
             codegenModel = this.reconcileInlineEnums(codegenModel, parentCodegenModel);
         }
 
+		codegenModel.imports.add("MoreObjects");
         return codegenModel;
     }
 
@@ -482,9 +482,6 @@ public class JavaClientCodegen extends DefaultCodegen implements CodegenConfig {
         }
 
         if(model.isEnum == null || model.isEnum) {
-            // needed by all pojos, but not enums
-            model.imports.add("ApiModelProperty");
-            model.imports.add("ApiModel");
             // comment out below as it's in the model template 
             //model.imports.add("Objects");
 
